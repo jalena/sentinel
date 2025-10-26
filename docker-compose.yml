@@ -1,6 +1,6 @@
 services:
   sentinel-dashboard:
-    image: sentinel-dashboard:latest
+    image: jalena/sentinel-dashboard:latest
     container_name: sentinel-dashboard
     environment:
       SERVER_PORT: 8858
