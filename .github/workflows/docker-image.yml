@@ -14,6 +14,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Extract Sentinel version from Dockerfile
+        id: version
+        run: |
+          VERSION=$(grep -oP '(?<=ARG SENTINEL_VERSION=)[0-9.]*' Dockerfile)
+          echo "SENTINEL_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Show detected version
+        run: echo "Building version ${{ env.SENTINEL_VERSION }}"
+
       - name: Login to DoukerHub
         uses: docker/login-action@v3
         with:
@@ -32,6 +42,9 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: jalena/sentinel-dashboard:latest
-
+          tags: |
+            jalena/sentinel-dashboard:${{ env.SENTINEL_VERSION }}
+            jalena/sentinel-dashboard:latest
+          build-args: |
+            SENTINEL_VERSION=${{ env.SENTINEL_VERSION }}
         
