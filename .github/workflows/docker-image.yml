@@ -17,14 +17,14 @@ jobs:
       - name: Extract Sentinel version from Dockerfile
         id: version
         run: |
-          VERSION=$(grep -oP '(?<=ARG SENTINEL_VERSION=)[0-9.]*' Dockerfile)
+          VERSION=$(grep -oP '(?<=ARG SENTINEL_VERSION=)[0-9.]*' Dockerfile || echo "latest")
           echo "SENTINEL_VERSION=$VERSION" >> $GITHUB_ENV
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Show detected version
-        run: echo "Building version ${{ env.SENTINEL_VERSION }}"
+        run: echo "Building Sentinel Dashboard version ${{ env.SENTINEL_VERSION }}"
 
-      - name: Login to DoukerHub
+      - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.SENTINEL_DOKERHUB_USER }}
@@ -35,6 +35,8 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          install: true
 
       - name: Build and push image
         uses: docker/build-push-action@v6
@@ -47,4 +49,6 @@ jobs:
             jalena/sentinel-dashboard:latest
           build-args: |
             SENTINEL_VERSION=${{ env.SENTINEL_VERSION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
         
