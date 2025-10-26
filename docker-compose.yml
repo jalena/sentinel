@@ -1,0 +1,13 @@
+services:
+  sentinel-dashboard:
+    image: sentinel-dashboard:latest
+    container_name: sentinel-dashboard
+    environment:
+      SERVER_PORT: 8858
+      DASHBOARD_USER: admin
+      DASHBOARD_PASS: admin123
+      PROJECT_NAME: sentinel-dashboard
+      JVM_OPTS: "-Xms256m -Xmx512m"
+    ports:
+      - "8858:8858"
+    restart: always
