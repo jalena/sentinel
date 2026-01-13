@@ -5,7 +5,7 @@ ARG SENTINEL_VERSION=1.8.9
 RUN set -x \
     && curl -SL --output /home/sentinel-dashboard.jar https://github.com/alibaba/Sentinel/releases/download/${SENTINEL_VERSION}/sentinel-dashboard-${SENTINEL_VERSION}.jar
 
-FROM openjdk:8-jre-slim
+FROM eclipse-temurin:8-jre-alpine-3.23
 
 LABEL com.bcsytv.image.authors="jalena"
 LABEL com.bcsytv.image.description="Sentinel Dashboard"
