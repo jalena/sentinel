@@ -7,13 +7,16 @@ RUN set -x \
 
 FROM openjdk:8-jre-slim
 
+LABEL com.bcsytv.image.authors="jalena"
+LABEL com.bcsytv.image.description="Sentinel Dashboard"
+
+WORKDIR /sentinel
+
 # copy sentinel jar
-COPY --from=installer ["/home/sentinel-dashboard.jar", "/home/sentinel-dashboard.jar"]
-
-ENV JAVA_OPTS '-Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080'
-
-RUN chmod -R +x /home/sentinel-dashboard.jar
+COPY --from=installer /home/sentinel-dashboard.jar /sentinel/sentinel-dashboard.jar
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 8080
 
-CMD java ${JAVA_OPTS} -jar /home/sentinel-dashboard.jar
+ENTRYPOINT ["/entrypoint.sh"]
